@@ -13,11 +13,11 @@
         android:theme="@style/Theme.AuthFyaB">
 
         <activity
-            android:name=".MainActivity"
+            android:name=".ui1.main.MainActivity"
             android:exported="false" />
 
         <activity
-            android:name=".SigninActivity"
+            android:name=".ui1.auth.SigninActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,7 +26,7 @@
         </activity>
 
         <activity
-            android:name=".SignupActivity"
+            android:name=".ui1.auth.SignupActivity"
             android:exported="false" />
 
     </application>

@@ -1,4 +1,4 @@
-package com.example.authfyab
+package com.example.authfyab.ui1.auth
 
 import android.content.Intent
 import android.os.Bundle

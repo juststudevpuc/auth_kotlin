@@ -1,4 +1,4 @@
-package com.example.authfyab
+package com.example.authfyab.ui1.main
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,6 +6,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.authfyab.R
+import com.example.authfyab.data.model.UserProfile
+import com.example.authfyab.ui1.auth.SigninActivity
 import com.google.android.material.button.MaterialButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore

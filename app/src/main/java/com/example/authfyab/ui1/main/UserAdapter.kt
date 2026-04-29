@@ -1,10 +1,12 @@
-package com.example.authfyab
+package com.example.authfyab.ui1.main
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.authfyab.R
+import com.example.authfyab.data.model.UserProfile
 
 // We pass in a list of UserProfile objects when we create this Adapter
 class UserAdapter(private val userList: List<UserProfile>) :

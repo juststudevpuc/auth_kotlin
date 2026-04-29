@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:fillViewport="true"
     android:background="@android:color/white"
-    tools:context=".SigninActivity">
+    tools:context=".ui1.auth.SigninActivity">
 
   <androidx.constraintlayout.widget.ConstraintLayout
       android:layout_width="match_parent"
