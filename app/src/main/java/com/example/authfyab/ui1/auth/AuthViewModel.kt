@@ -12,6 +12,8 @@ class AuthViewModel : ViewModel() {
     // LiveData acts like a radio broadcast. The Activity will "tune in" to listen to these.
     val loginSuccess = MutableLiveData<Boolean>()
     val toastMessage = MutableLiveData<String>()
+    // NEW: Bell for Signup Success
+    val signupSuccess = MutableLiveData<Boolean>()
 
     fun performLogin(email: String, pass: String) {
         // 1. Check for empty fields right here in the brain!
@@ -27,6 +29,23 @@ class AuthViewModel : ViewModel() {
                 loginSuccess.value = true
             } else {
                 // Broadcast the error message
+                toastMessage.value = message
+            }
+        }
+    }
+
+    // NEW: The Signup Check
+    fun performSignup(email: String, pass: String) {
+        if (email.isEmpty() || pass.isEmpty()) {
+            toastMessage.value = "Fields cannot be empty"
+            return
+        }
+
+        repository.registerUser(email, pass) { isSuccess, message ->
+            if (isSuccess) {
+                signupSuccess.value = true
+                toastMessage.value = message // Optional: Show success toast
+            } else {
                 toastMessage.value = message
             }
         }
