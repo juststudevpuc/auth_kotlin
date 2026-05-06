@@ -1,58 +1,52 @@
-package com.example.authfyab.ui1.auth
+package com.example.auth_kotlin
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
-import com.example.authfyab.databinding.ActivitySigninBinding
-import com.example.authfyab.ui.auth.AuthViewModel
-import com.example.authfyab.ui1.main.MainActivity
+import com.google.firebase.auth.FirebaseAuth
 
 class SigninActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivitySigninBinding
-
-    // 1. Declare the Manager (ViewModel) instead of Firebase
-    private lateinit var authViewModel: AuthViewModel
+    private lateinit var auth: FirebaseAuth
+    private lateinit var emailEt: EditText
+    private lateinit var passwordEt: EditText
+    private lateinit var loginBtn: Button
+    private lateinit var forgotPasswordTv: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        binding = ActivitySigninBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        setContentView(R.layout.activity_signin)
 
-        // 2. Initialize the ViewModel
-        authViewModel = ViewModelProvider(this).get(AuthViewModel::class.java)
+        auth = FirebaseAuth.getInstance()
 
-        // 3. When the user clicks login, just hand the order to the Manager
-        binding.loginButton.setOnClickListener {
-            val email = binding.loginEmail.text.toString()
-            val password = binding.loginPassword.text.toString()
+        emailEt = findViewById(R.id.etEmail)
+        passwordEt = findViewById(R.id.etPassword)
+        loginBtn = findViewById(R.id.btnLogin)
+        forgotPasswordTv = findViewById(R.id.tvForgotPassword)
 
-            // The ViewModel does all the checking and Firebase calling now!
-            authViewModel.performLogin(email, password)
-        }
+        // LOGIN
+        loginBtn.setOnClickListener {
+            val email = emailEt.text.toString().trim()
+            val password = passwordEt.text.toString().trim()
 
-        // 4. Listen for the Success Bell from the ViewModel
-        authViewModel.loginSuccess.observe(this) { isSuccess ->
-            if (isSuccess) {
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
-                finish() // Destroy the login screen so they can't press 'back' to get here
+            if (email.isEmpty() || password.isEmpty()) {
+                Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
             }
+
+            auth.signInWithEmailAndPassword(email, password)
+                .addOnSuccessListener {
+                    Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show()
+                }
+                .addOnFailureListener {
+                    Toast.makeText(this, it.message, Toast.LENGTH_LONG).show()
+                }
         }
 
-        // 5. Listen for the Error Bell from the ViewModel
-        authViewModel.toastMessage.observe(this) { message ->
-            Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-        }
-
-        // Keep your redirect button exactly the same
-        binding.signupRedirectText.setOnClickListener {
-            val signupIntent = Intent(this, SignupActivity::class.java)
-            startActivity(signupIntent)
+        // FORGOT PASSWORD → go to new screen
+        forgotPasswordTv.setOnClickListener {
+            startActivity(Intent(this, ForgotPasswordActivity::class.java))
         }
     }
 }
