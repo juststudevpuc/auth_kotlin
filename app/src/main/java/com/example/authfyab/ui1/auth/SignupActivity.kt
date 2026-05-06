@@ -7,7 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.authfyab.databinding.ActivitySignupBinding
-import com.example.authfyab.ui.auth.AuthViewModel
+import com.example.authfyab.ui1.auth.AuthViewModel
 
 class SignupActivity : AppCompatActivity() {
 

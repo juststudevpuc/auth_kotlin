@@ -7,33 +7,37 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.authfyab.R
 import com.example.authfyab.data.model.UserProfile
+import com.google.android.material.button.MaterialButton // We need this for your new buttons!
 
-// We pass in a list of UserProfile objects when we create this Adapter
-class UserAdapter(private val userList: List<UserProfile>) :
-    RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
+// 1. Notice the two NEW variables in the constructor. These are our "messengers"
+class UserAdapter(
+    private val userList: List<UserProfile>,
+) : RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
 
-    // 1. This creates the physical card on the screen using your XML layout
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_user_card, parent, false)
         return UserViewHolder(view)
     }
 
-    // 2. This plugs the actual database text into the visual card
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
         val currentUser = userList[position]
+
+        // Draw the text
         holder.emailText.text = currentUser.email
         holder.roleText.text = "Role: ${currentUser.role}"
+
+
     }
 
-    // 3. This tells the system exactly how many cards to draw
     override fun getItemCount(): Int {
         return userList.size
     }
 
-    // The ViewHolder acts like a map, pointing to the IDs in your item_user_card.xml
     class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val emailText: TextView = itemView.findViewById(R.id.tvEmail)
         val roleText: TextView = itemView.findViewById(R.id.tvRole)
+
+
     }
 }

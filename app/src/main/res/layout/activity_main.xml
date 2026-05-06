@@ -46,16 +46,20 @@
             app:cardBackgroundColor="#E2E8F0"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="@id/text_user_name">
+            app:layout_constraintBottom_toBottomOf="@id/text_user_name"
+
+            >
 
             <TextView
+                android:id="@+id/tvProfileInitial"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="7"
                 android:textColor="#0F172A"
                 android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                tools:text="A" />
+
         </androidx.cardview.widget.CardView>
 
         <com.google.android.material.card.MaterialCardView
