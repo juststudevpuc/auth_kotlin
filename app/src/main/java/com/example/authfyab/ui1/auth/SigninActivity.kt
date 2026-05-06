@@ -14,6 +14,8 @@ class SigninActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySigninBinding
 
+    private lateinit var auth: FirebaseAuth
+
     // 1. Declare the Manager (ViewModel) instead of Firebase
     private lateinit var authViewModel: AuthViewModel
 
