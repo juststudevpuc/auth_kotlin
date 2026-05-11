@@ -26,8 +26,7 @@ class UserAdapter(
         // Draw the text
         holder.emailText.text = currentUser.email
         holder.roleText.text = "Role: ${currentUser.role}"
-
-
+        holder.phoneText.text = "Phone: ${currentUser.phone}"
     }
 
     override fun getItemCount(): Int {
@@ -37,7 +36,7 @@ class UserAdapter(
     class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val emailText: TextView = itemView.findViewById(R.id.tvEmail)
         val roleText: TextView = itemView.findViewById(R.id.tvRole)
-
+        val phoneText: TextView = itemView.findViewById(R.id.tvPhone)
 
     }
 }

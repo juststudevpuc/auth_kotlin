@@ -8,49 +8,42 @@ class AuthRepository {
     private val firebaseAuth = FirebaseAuth.getInstance()
     private val firestore = FirebaseFirestore.getInstance()
 
-    // The callback (onResult) sends the answer back up to the ViewModel
     fun loginUser(email: String, pass: String, onResult: (Boolean, String) -> Unit) {
         firebaseAuth.signInWithEmailAndPassword(email, pass)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    // Tell the ViewModel: True (Success), with a success message
                     onResult(true, "Login Successful")
                 } else {
-                    // Tell the ViewModel: False (Failed), with the exact Firebase error
                     onResult(false, task.exception?.message ?: "Unknown login error")
                 }
             }
     }
 
-    // NEW: The Signup Function
-    fun registerUser(email: String, pass: String, onResult: (Boolean, String) -> Unit) {
-        // Step 1: Create the Vault Account
+    fun registerUser(email: String, phone: String, pass: String, onResult: (Boolean, String) -> Unit) {
         firebaseAuth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener { task ->
             if (task.isSuccessful) {
-
-                // Step 2: Save to Firestore
                 val userId = firebaseAuth.currentUser?.uid
                 if (userId != null) {
                     val userMap = hashMapOf(
                         "email" to email,
+                        "phone" to phone,
                         "role" to "user"
                     )
 
                     firestore.collection("Users").document(userId).set(userMap)
                         .addOnSuccessListener {
-                            onResult(true, "Account Created & Data Saved!") // Success!
+                            onResult(true, "Account Created & Data Saved!")
                         }
                         .addOnFailureListener { e ->
-                            onResult(false, "Firestore Error: ${e.message}") // Database failed
+                            onResult(false, "Firestore Error: ${e.message}")
                         }
                 }
             } else {
-                onResult(false, task.exception?.message ?: "Unknown signup error") // Auth failed
+                onResult(false, task.exception?.message ?: "Unknown signup error")
             }
         }
     }
 
-    //    01/may
     fun updatePassword(
         email: String,
         oldPass: String,
@@ -60,14 +53,10 @@ class AuthRepository {
         val user = firebaseAuth.currentUser
 
         if (user != null && user.email == email) {
-            // 1. Create a "key" using their old password
             val credential = EmailAuthProvider.getCredential(email, oldPass)
 
-            // 2. Re-authenticate them behind the scenes
             user.reauthenticate(credential).addOnCompleteListener { reauthTask ->
                 if (reauthTask.isSuccessful) {
-
-                    // 3. If old password is correct, update to the new one!
                     user.updatePassword(newPass).addOnCompleteListener { updateTask ->
                         if (updateTask.isSuccessful) {
                             onResult(true, "Password updated successfully!")
@@ -76,7 +65,6 @@ class AuthRepository {
                         }
                     }
                 } else {
-                    // This triggers if they typed the wrong CURRENT password
                     onResult(false, "Incorrect Current Password!")
                 }
             }
@@ -85,19 +73,14 @@ class AuthRepository {
         }
     }
 
-    // NEW: Delete Account Function
     fun deleteUserAccount(email: String, currentPass: String, onResult: (Boolean, String) -> Unit) {
         val user = firebaseAuth.currentUser
 
         if (user != null && user.email == email) {
-            // 1. Create a "key" using their password
             val credential = EmailAuthProvider.getCredential(email, currentPass)
 
-            // 2. Re-authenticate them behind the scenes
             user.reauthenticate(credential).addOnCompleteListener { reauthTask ->
                 if (reauthTask.isSuccessful) {
-
-                    // 3. If password is correct, DELETE the account!
                     user.delete().addOnCompleteListener { deleteTask ->
                         if (deleteTask.isSuccessful) {
                             onResult(true, "Account deleted successfully.")
@@ -106,7 +89,6 @@ class AuthRepository {
                         }
                     }
                 } else {
-                    // Triggers if they typed the wrong password
                     onResult(false, "Incorrect Password! Cannot delete account.")
                 }
             }
@@ -115,4 +97,26 @@ class AuthRepository {
         }
     }
 
+    fun sendPasswordReset(email: String, phone: String, onResult: (Boolean, String) -> Unit) {
+        firestore.collection("Users")
+            .whereEqualTo("email", email)
+            .whereEqualTo("phone", phone)
+            .get()
+            .addOnSuccessListener { documents ->
+                if (documents.isEmpty) {
+                    onResult(false, "No account matches this email and phone number.")
+                } else {
+                    firebaseAuth.sendPasswordResetEmail(email)
+                        .addOnSuccessListener {
+                            onResult(true, "Reset link sent to your email")
+                        }
+                        .addOnFailureListener { e ->
+                            onResult(false, "Error: ${e.message}")
+                        }
+                }
+            }
+            .addOnFailureListener { e ->
+                onResult(false, "Database check failed: ${e.message}")
+            }
+    }
 }

@@ -1,58 +1,72 @@
-package com.example.auth_kotlin
+package com.example.authfyab.ui1.auth // Update this package name if necessary!
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.*
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.google.firebase.auth.FirebaseAuth
+import androidx.lifecycle.ViewModelProvider
+import com.example.authfyab.databinding.ActivitySigninBinding
+import com.example.authfyab.ui1.main.MainActivity
 
 class SigninActivity : AppCompatActivity() {
 
-    private lateinit var auth: FirebaseAuth
-    private lateinit var emailEt: EditText
-    private lateinit var passwordEt: EditText
-    private lateinit var loginBtn: Button
-    private lateinit var forgotPasswordTv: TextView
     private lateinit var binding: ActivitySigninBinding
-
-    private lateinit var auth: FirebaseAuth
-
-    // 1. Declare the Manager (ViewModel) instead of Firebase
     private lateinit var authViewModel: AuthViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_signin)
 
-        auth = FirebaseAuth.getInstance()
+        // Initialize View Binding
+        binding = ActivitySigninBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        emailEt = findViewById(R.id.etEmail)
-        passwordEt = findViewById(R.id.etPassword)
-        loginBtn = findViewById(R.id.btnLogin)
-        forgotPasswordTv = findViewById(R.id.tvForgotPassword)
+        // Initialize the ViewModel (Fixed the lowercase 'a' typo here!)
+        authViewModel = ViewModelProvider(this).get(AuthViewModel::class.java)
 
-        // LOGIN
-        loginBtn.setOnClickListener {
-            val email = emailEt.text.toString().trim()
-            val password = passwordEt.text.toString().trim()
+        // LOGIN BUTTON CLICK (Matches XML: @+id/login_button)
+        binding.loginButton.setOnClickListener {
+            // Matches XML: @+id/login_email and @+id/login_password
+            val email = binding.loginEmail.text.toString().trim()
+            val password = binding.loginPassword.text.toString().trim()
 
-            if (email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
+            // LOGIN BUTTON CLICK
+            binding.loginButton.setOnClickListener {
+                val email = binding.loginEmail.text.toString().trim()
+                val password = binding.loginPassword.text.toString().trim()
+
+                // FIXED: Use performLogin to match your ViewModel!
+                authViewModel.performLogin(email, password)
             }
-
-            auth.signInWithEmailAndPassword(email, password)
-                .addOnSuccessListener {
-                    Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show()
-                }
-                .addOnFailureListener {
-                    Toast.makeText(this, it.message, Toast.LENGTH_LONG).show()
-                }
         }
 
-        // FORGOT PASSWORD → go to new screen
-        forgotPasswordTv.setOnClickListener {
-            startActivity(Intent(this, ForgotPasswordActivity::class.java))
+        // FORGOT PASSWORD CLICK (Matches XML: @+id/forgot_password)
+        binding.forgotPassword.setOnClickListener {
+            val intent = Intent(this, ForgotPasswordActivity::class.java)
+            startActivity(intent)
+        }
+
+        // SIGNUP REDIRECT CLICK (Matches XML: @+id/signupRedirectText)
+        binding.signupRedirectText.setOnClickListener {
+            // Assuming you have a SignupActivity. Change if needed!
+            val intent = Intent(this, SignupActivity::class.java)
+            startActivity(intent)
+        }
+
+        // OBSERVE SUCCESS -> Go to MainActivity
+        authViewModel.loginSuccess.observe(this) { isSuccess ->
+            if (isSuccess) {
+                Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show()
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+                finish() // Close the login screen
+            }
+        }
+
+        // OBSERVE ERRORS -> Show Toast
+        authViewModel.toastMessage.observe(this) { message ->
+            if (message != null) {
+                Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+            }
         }
     }
 }

@@ -7,7 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.authfyab.databinding.ActivitySignupBinding
-import com.example.authfyab.ui1.auth.AuthViewModel
+
 
 class SignupActivity : AppCompatActivity() {
 
@@ -20,17 +20,16 @@ class SignupActivity : AppCompatActivity() {
         binding = ActivitySignupBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Initialize ViewModel
         authViewModel = ViewModelProvider(this).get(AuthViewModel::class.java)
 
-        // 1. One line of code to handle the button click!
         binding.signupButton.setOnClickListener {
-            val email = binding.signupEmail.text.toString()
-            val password = binding.signupPassword.text.toString()
-            authViewModel.performSignup(email, password)
+            val email = binding.signupEmail.text.toString().trim()
+            val phone = binding.signupPhone.text.toString().trim()
+            val password = binding.signupPassword.text.toString().trim()
+
+            authViewModel.performSignup(email, phone, password)
         }
 
-        // 2. Listen for Success
         authViewModel.signupSuccess.observe(this) { isSuccess ->
             if (isSuccess) {
                 val intent = Intent(this, SigninActivity::class.java)
@@ -39,12 +38,10 @@ class SignupActivity : AppCompatActivity() {
             }
         }
 
-        // 3. Listen for Errors
         authViewModel.toastMessage.observe(this) { message ->
             Toast.makeText(this, message, Toast.LENGTH_LONG).show()
         }
 
-        // Redirect back to login
         binding.loginRedirectText.setOnClickListener {
             val intent = Intent(this, SigninActivity::class.java)
             startActivity(intent)

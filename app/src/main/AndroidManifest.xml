@@ -28,12 +28,12 @@
         <activity
             android:name=".ui1.auth.SignupActivity"
             android:exported="false" />
-<<<<<<< patch-5
+
         
-        <activity android:name=".ForgotPasswordActivity"/>
-=======
+        <activity android:name=".ui1.auth.ForgotPasswordActivity"/>
+
         <activity android:name=".ui1.main.ProfileActivity" />
->>>>>>> main
+
 
     </application>
 
