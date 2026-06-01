@@ -95,10 +95,10 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
+                    android:lineSpacingExtra="4dp"
                     android:text="Hello there, We are Group 7 and our project is building a login and register app with Firestore. Hope you guys enjoy it."
                     android:textColor="#94A3B8"
                     android:textSize="15sp"
-                    android:lineSpacingExtra="4dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/card_title" />
@@ -233,18 +233,32 @@
             app:layout_constraintTop_toBottomOf="@id/users_list_title"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnBudgetTracker"
+            android:layout_width="0dp"
+            android:layout_height="64dp"
+            android:layout_marginTop="32dp"
+            android:text="Open Budget Tracker"
+            android:textColor="#FFFFFF"
+            app:backgroundTint="#0F172A"
+            app:cornerRadius="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/recyclerViewUsers" />
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_logout"
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="0dp"
             android:layout_height="64dp"
-            android:layout_marginTop="48dp"
+            android:layout_marginTop="16dp"
             android:text="Log Out"
             android:textColor="#E11D48"
             app:cornerRadius="12dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/recyclerViewUsers" />
+            app:layout_constraintTop_toBottomOf="@id/btnBudgetTracker" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

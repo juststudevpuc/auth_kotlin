@@ -29,6 +29,8 @@ class SigninActivity : AppCompatActivity() {
             val email = binding.loginEmail.text.toString().trim()
             val password = binding.loginPassword.text.toString().trim()
 
+            authViewModel.performLogin(email, password)
+
             // LOGIN BUTTON CLICK
             binding.loginButton.setOnClickListener {
                 val email = binding.loginEmail.text.toString().trim()

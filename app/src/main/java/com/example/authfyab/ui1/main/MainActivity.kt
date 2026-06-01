@@ -34,6 +34,11 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        binding.btnBudgetTracker.setOnClickListener {
+            val intent = Intent(this, com.example.authfyab.ui1.budget.DashboardActivity::class.java)
+            startActivity(intent)
+        }
+
         // Setup RecyclerView using Binding
         binding.recyclerViewUsers.layoutManager = LinearLayoutManager(this)
         userAdapter = UserAdapter(userList)
